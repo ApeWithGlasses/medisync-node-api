@@ -109,7 +109,6 @@ npm start
 medisync-node-api/
 ├── app.js                 # Archivo principal
 ├── package.json           # Dependencias
-├── .env.example          # Variables de entorno (ejemplo)
 ├── models/
 │   └── User.js           # Modelo de usuario
 ├── routes/
@@ -117,11 +116,3 @@ medisync-node-api/
 └── middleware/
     └── auth.js           # Middleware de verificación JWT
 ```
-
-## Notas de Seguridad
-
-- El token JWT expira en 7 días
-- Las contraseñas se hashean con bcryptjs (10 rondas)
-- Utiliza HTTPS en producción
-- Mantén `JWT_SECRET` seguro en variables de entorno
-- No compartas tokens con terceros
