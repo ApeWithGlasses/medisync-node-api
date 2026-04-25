@@ -4,6 +4,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/auth');
+const patientsRoutes = require('./routes/patients');
+const doctorsRoutes = require('./routes/doctors');
+const appointmentsRoutes = require('./routes/appointments');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const uri = process.env.URI;
@@ -13,14 +17,25 @@ const PORT = process.env.PORT || 3001;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Rutas de autenticación
+// Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/patients', patientsRoutes);
+app.use('/api/doctors', doctorsRoutes);
+app.use('/api/appointments', appointmentsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.json({
     mensaje: 'Bienvenido a MediSync API',
     version: '1.0.0',
+    endpoints: {
+      autenticacion: '/api/auth',
+      pacientes: '/api/patients',
+      doctores: '/api/doctors',
+      citas: '/api/appointments',
+      administracion: '/api/admin',
+    },
   });
 });
 

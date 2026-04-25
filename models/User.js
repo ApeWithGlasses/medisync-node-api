@@ -19,6 +19,15 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
+  rol: {
+    type: String,
+    enum: ['paciente', 'doctor', 'admin'],
+    default: 'paciente',
+  },
+  activo: {
+    type: Boolean,
+    default: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

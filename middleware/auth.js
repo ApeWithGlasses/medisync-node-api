@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
 const verificarToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -16,4 +17,27 @@ const verificarToken = (req, res, next) => {
   }
 };
 
-module.exports = { verificarToken };
+const verificarRol = (rolesPermitidos) => {
+  return async (req, res, next) => {
+    try {
+      const usuario = await User.findById(req.userId);
+
+      if (!usuario) {
+        return res.status(401).json({ error: 'Usuario no encontrado' });
+      }
+
+      if (!rolesPermitidos.includes(usuario.rol)) {
+        return res.status(403).json({
+          error: 'Acceso denegado. No tienes permisos suficientes',
+        });
+      }
+
+      req.usuario = usuario;
+      next();
+    } catch (error) {
+      return res.status(500).json({ error: 'Error en la verificación de rol' });
+    }
+  };
+};
+
+module.exports = { verificarToken, verificarRol };

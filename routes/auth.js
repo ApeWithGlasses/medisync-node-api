@@ -1,6 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Patient = require('../models/Patient');
+const Doctor = require('../models/Doctor');
 
 const router = express.Router();
 
@@ -36,9 +38,27 @@ router.post('/registro', async (req, res) => {
       email,
       password,
       nombre,
+      rol: 'paciente',
     });
 
     await nuevoUsuario.save();
+
+    // Crear perfil básico de paciente automáticamente
+    if (nuevoUsuario.rol === 'paciente') {
+      const nuevoPaciente = new Patient({
+        usuario: nuevoUsuario._id,
+        numeroIdentificacion: '',
+        tipoIdentificacion: 'CC',
+        telefono: '',
+        direccion: '',
+        ciudad: '',
+        fechaNacimiento: null,
+        genero: 'M',
+        historiaMedica: '',
+        alergias: '',
+      });
+      await nuevoPaciente.save();
+    }
 
     // Generar token JWT
     const token = jwt.sign(
@@ -53,6 +73,7 @@ router.post('/registro', async (req, res) => {
         id: nuevoUsuario._id,
         email: nuevoUsuario.email,
         nombre: nuevoUsuario.nombre,
+        rol: nuevoUsuario.rol,
       },
       token,
     });
